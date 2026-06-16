@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Duvodio — Rozhodujte podle důvodů, ne pocitů</title>
+  <meta name="description" content="Duvodio pomáhá manažerům pochopit, proč se mění výkon, forecast a obchodní výsledky — dřív než je pozdě." />
+  <style>
+    :root {
+      --bg: #0b1020;
+      --panel: #11182d;
+      --text: #f6f7fb;
+      --muted: #a8b0c4;
+      --line: rgba(255,255,255,.12);
+      --accent: #6ee7b7;
+      --accent2: #93c5fd;
+      --danger: #fca5a5;
+      --radius: 22px;
+      --shadow: 0 24px 80px rgba(0,0,0,.35);
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top left, rgba(147,197,253,.22), transparent 35%),
+                  radial-gradient(circle at top right, rgba(110,231,183,.18), transparent 32%),
+                  var(--bg);
+      color: var(--text);
+      line-height: 1.55;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    .wrap { width: min(1120px, calc(100% - 40px)); margin: 0 auto; }
+
+    header {
+      padding: 26px 0;
+      position: sticky;
+      top: 0;
+      backdrop-filter: blur(16px);
+      background: rgba(11,16,32,.72);
+      border-bottom: 1px solid var(--line);
+      z-index: 10;
+    }
+
+    nav { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+    .logo { display: flex; align-items: center; gap: 12px; font-weight: 800; letter-spacing: .2px; }
+    .mark {
+      width: 34px; height: 34px; border-radius: 12px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      display: grid; place-items: center; color: #07101f; font-weight: 900;
+      box-shadow: 0 10px 30px rgba(110,231,183,.22);
+    }
+    .navlinks { display: flex; align-items: center; gap: 22px; color: var(--muted); font-size: 14px; }
+    .button {
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 12px 18px; border-radius: 999px; font-weight: 750;
+      background: var(--text); color: #081120;
+      border: 1px solid rgba(255,255,255,.2);
+      transition: transform .15s ease, opacity .15s ease;
+    }
+    .button:hover { transform: translateY(-1px); opacity: .94; }
+    .button.secondary { background: transparent; color: var(--text); border-color: var(--line); }
+
+    .hero { padding: 88px 0 64px; }
+    .hero-grid { display: grid; grid-template-columns: 1.08fr .92fr; gap: 46px; align-items: center; }
+    .eyebrow {
+      display: inline-flex; gap: 8px; align-items: center; color: var(--accent);
+      border: 1px solid rgba(110,231,183,.25); background: rgba(110,231,183,.08);
+      padding: 8px 12px; border-radius: 999px; font-size: 14px; font-weight: 700;
+    }
+    h1 { font-size: clamp(42px, 6vw, 76px); line-height: .98; margin: 22px 0 20px; letter-spacing: -2.5px; }
+    .lead { color: var(--muted); font-size: 20px; max-width: 650px; }
+    .cta-row { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 32px; }
+    .note { color: var(--muted); font-size: 14px; margin-top: 18px; }
+
+    .dashboard {
+      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.035));
+      border: 1px solid var(--line); border-radius: var(--radius); padding: 22px;
+      box-shadow: var(--shadow);
+    }
+    .dash-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
+    .pill { color: var(--accent); background: rgba(110,231,183,.09); border: 1px solid rgba(110,231,183,.2); padding: 6px 10px; border-radius: 999px; font-size: 12px; font-weight: 800; }
+    .metric { background: rgba(255,255,255,.055); border: 1px solid var(--line); border-radius: 18px; padding: 18px; margin-bottom: 14px; }
+    .metric small { color: var(--muted); display: block; margin-bottom: 8px; }
+    .metric strong { font-size: 34px; letter-spacing: -1px; }
+    .down { color: var(--danger); }
+    .bars { display: grid; gap: 10px; margin-top: 16px; }
+    .bar { height: 11px; background: rgba(255,255,255,.08); border-radius: 999px; overflow: hidden; }
+    .bar span { display: block; height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2)); border-radius: inherit; }
+
+    section { padding: 70px 0; }
+    .section-title { max-width: 760px; margin-bottom: 32px; }
+    h2 { font-size: clamp(30px, 4vw, 48px); line-height: 1.05; letter-spacing: -1.5px; margin: 0 0 14px; }
+    .section-title p { color: var(--muted); font-size: 18px; margin: 0; }
+    .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .card { background: rgba(255,255,255,.055); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; }
+    .card h3 { margin: 0 0 10px; font-size: 20px; }
+    .card p { color: var(--muted); margin: 0; }
+
+    .quote { background: linear-gradient(135deg, rgba(110,231,183,.12), rgba(147,197,253,.10)); border: 1px solid var(--line); border-radius: 28px; padding: 34px; display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: center; }
+    .quote strong { font-size: clamp(26px, 4vw, 44px); line-height: 1.08; letter-spacing: -1.2px; display: block; }
+    .quote p { color: var(--muted); margin: 12px 0 0; }
+
+    footer { padding: 44px 0; border-top: 1px solid var(--line); color: var(--muted); }
+    footer .wrap { display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+
+    @media (max-width: 860px) {
+      .hero-grid, .cards, .quote { grid-template-columns: 1fr; }
+      .navlinks { display: none; }
+      .hero { padding-top: 58px; }
+      h1 { letter-spacing: -1.6px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <nav>
+        <a class="logo" href="#top" aria-label="Duvodio domů"><span class="mark">D</span><span>Duvodio</span></a>
+        <div class="navlinks">
+          <a href="#problem">Problém</a>
+          <a href="#reseni">Řešení</a>
+          <a href="#kontakt">Kontakt</a>
+          <a class="button" href="mailto:hello@duvodio.com?subject=Chci%20demo%20Duvodio">Chci demo</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div>
+          <div class="eyebrow">Decision intelligence pro firmy, které chtějí vědět proč</div>
+          <h1>Nesázejte. Rozhodujte podle důvodů.</h1>
+          <p class="lead">Duvodio propojí forecast, funnel a obchodní realitu. Ukáže manažerům nejen co se děje, ale hlavně proč — a co s tím udělat dál.</p>
+          <div class="cta-row">
+            <a class="button" href="mailto:hello@duvodio.com?subject=Chci%20demo%20Duvodio">Domluvit demo</a>
+            <a class="button secondary" href="#reseni">Jak to funguje</a>
+          </div>
+          <p class="note">První verze pro sales pipeline, forecast a vysvětlení poklesů výkonu.</p>
+        </div>
+
+        <div class="dashboard" aria-label="Ukázka Duvodio dashboardu">
+          <div class="dash-top">
+            <strong>Forecast vysvětlený</strong>
+            <span class="pill">LIVE INSIGHT</span>
+          </div>
+          <div class="metric">
+            <small>Očekávaný počet kontraktů</small>
+            <strong>48</strong> <span class="down">−31 % vs. plán</span>
+          </div>
+          <div class="metric">
+            <small>Hlavní důvod změny</small>
+            <strong style="font-size:24px">Pokles kvality dealů z paid zdrojů</strong>
+            <div class="bars">
+              <div class="bar"><span style="width:76%"></span></div>
+              <div class="bar"><span style="width:54%"></span></div>
+              <div class="bar"><span style="width:38%"></span></div>
+            </div>
+          </div>
+          <div class="metric">
+            <small>Doporučená otázka pro management</small>
+            <p style="margin:0;color:var(--text)">Které kampaně přivádí méně kvalitní pipeline a proč se to změnilo tento měsíc?</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="problem">
+      <div class="wrap">
+        <div class="section-title">
+          <h2>Dashboard ukáže číslo. Manažer ale potřebuje důvod.</h2>
+          <p>Když výkon klesá, nestačí vědět, že je něco horší. Potřebujete rychle pochopit, jestli je problém v objemu leadů, kvalitě pipeline, obchodní aktivitě, backlogu nebo v chování zákazníků.</p>
+        </div>
+        <div class="cards">
+          <div class="card"><h3>Forecast</h3><p>Kolik pravděpodobně doručíte do konce období a jak moc si tím můžete být jistí.</p></div>
+          <div class="card"><h3>Důvody</h3><p>Co změnu výsledku skutečně táhne: zdroj, obchodník, fáze funnelu, kvalita nebo starý backlog.</p></div>
+          <div class="card"><h3>Akce</h3><p>Jaké otázky má management položit a kde má tým hledat první nápravné kroky.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="reseni">
+      <div class="wrap">
+        <div class="quote">
+          <div>
+            <strong>Duvodio je analytik, který se každý den dívá do dat a připraví vám vysvětlení.</strong>
+            <p>Ne další tabulka. Ne další dashboard. Systém, který pomáhá udělat lepší rozhodnutí včas.</p>
+          </div>
+          <a class="button" href="mailto:hello@duvodio.com?subject=Chci%20pilot%20Duvodio">Chci pilot</a>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <div class="section-title">
+          <h2>Pro koho je Duvodio?</h2>
+          <p>Pro CEO, COO, Head of Sales a týmy, které mají CRM data, pravidelný výkon a potřebují chápat změny dřív než na konci měsíce.</p>
+        </div>
+        <div class="cards">
+          <div class="card"><h3>Sales týmy</h3><p>Forecast kontraktů, kvalita funnelu, zdroje poklesu a dopad backlogu.</p></div>
+          <div class="card"><h3>Agentury</h3><p>Vysvětlení výkonu kampaní v návaznosti na obchodní výsledky, ne jen na leady.</p></div>
+          <div class="card"><h3>Menší firmy</h3><p>Jednoduchý rozhodovací systém bez nutnosti budovat velké datové oddělení.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="kontakt">
+      <div class="wrap">
+        <div class="quote">
+          <div>
+            <strong>Chcete vědět, proč se vám mění výkon?</strong>
+            <p>Pošlete ukázku funnelu nebo CRM exportu. Ukážu vám první vysvětlení na vašich datech.</p>
+          </div>
+          <a class="button" href="mailto:hello@duvodio.com?subject=Chci%20ukázku%20na%20datech">Napsat</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <span>© 2026 Duvodio</span>
+      <span>Nesázej. Rozhoduj podle důvodů.</span>
+    </div>
+  </footer>
+</body>
+</html>
