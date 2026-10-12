@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>duvodio — Pochopte svůj business. Simulujte jeho budoucnost.</title>
+  <title>Duvodio — Pochopte svůj business. Simulujte jeho budoucnost.</title>
   <meta name="description" content="Duvodio pomáhá firmám pochopit, jak se jejich business chová, a simulovat dopad změn dříve, než je provedou v realitě." />
 
   <style>
@@ -559,6 +559,34 @@
       border-top: 1px solid var(--line);
     }
 
+
+
+    /* INTERACTIVE CONTROLS */
+    .nav-actions { display:flex; align-items:center; gap:12px; }
+    .language-switch { display:flex; gap:3px; padding:4px; border:1px solid var(--line); border-radius:999px; background:rgba(255,255,255,.045); }
+    .lang-btn { border:0; border-radius:999px; padding:7px 10px; color:var(--muted); background:transparent; font:inherit; font-size:12px; font-weight:850; cursor:pointer; }
+    .lang-btn.active { color:var(--text); background:rgba(255,255,255,.14); }
+    .slider-wrap { margin:10px 0 4px; }
+    #lead-change { width:100%; accent-color:var(--brand2); cursor:pointer; }
+    .slider-labels { display:flex; justify-content:space-between; color:var(--muted2); font-size:12px; margin-top:3px; }
+    #lead-change-label strong { color:var(--brand2); }
+    .demo-disclaimer { color:var(--muted2); font-size:12px; margin-top:14px; }
+    .btn, .lang-btn { transition: transform .18s ease, background .18s ease, border-color .18s ease; }
+    .btn:hover { transform:translateY(-1px); }
+    .lang-btn:focus-visible, .btn:focus-visible, #lead-change:focus-visible { outline:2px solid var(--brand2); outline-offset:3px; }
+    @media (max-width: 950px) {
+      .nav-actions { gap:8px; }
+      .nav-inner { gap:10px; }
+      .nav-actions .btn { padding:0 13px; }
+    }
+    @media (max-width: 600px) {
+      .nav-inner { height:auto; min-height:72px; padding:10px 0; flex-wrap:wrap; }
+      .nav-actions { margin-left:auto; }
+      .nav-actions .btn { min-height:40px; font-size:12px; }
+      .language-switch { padding:3px; }
+      .lang-btn { padding:6px 8px; }
+    }
+
     @media (max-width: 950px) {
       .hero-grid,
       .comparison,
@@ -627,9 +655,15 @@
         <a href="#value">Hodnota</a>
       </div>
 
-      <a class="btn primary" href="mailto:hello@duvod.io?subject=Chci pilot duvodio">
-        Vyzkoušet Duvodio
-      </a>
+      <div class="nav-actions">
+        <div class="language-switch" role="group" aria-label="Jazyk stránky">
+          <button type="button" class="lang-btn active" data-lang="cs" aria-pressed="true">CZ</button>
+          <button type="button" class="lang-btn" data-lang="en" aria-pressed="false">EN</button>
+        </div>
+        <a class="btn primary" href="http://94.237.27.165:9005/" target="_blank" rel="noopener noreferrer" data-demo-link>
+          Vyzkoušet demo ↗
+        </a>
+      </div>
     </div>
   </nav>
 
@@ -657,12 +691,12 @@
           </p>
 
           <div class="hero-actions">
-            <a class="btn primary" href="#simulate">
-              Co kdyby…?
+            <a class="btn primary" href="http://94.237.27.165:9005/" target="_blank" rel="noopener noreferrer" data-demo-link>
+              Vyzkoušet živé demo ↗
             </a>
 
-            <a class="btn" href="#ai">
-              Proč nestačí AI
+            <a class="btn" href="#simulate">
+              Prozkoumat simulaci ↓
             </a>
           </div>
 
@@ -687,40 +721,32 @@
 
           <div class="simulation-body">
 
-            <div class="question">
-              Co když zvýšíme počet leadů z jednoho zdroje o 50 %?
+            <div class="question" id="simulation-question">
+              Co když změníme počet leadů z vybraného zdroje?
             </div>
 
-            <div class="scenario-label">
-              Původní očekávání
+            <div class="scenario-label" id="lead-change-label">Změna počtu leadů: <strong id="lead-change-value">+50 %</strong></div>
+            <div class="slider-wrap">
+              <input id="lead-change" type="range" min="-50" max="100" step="10" value="50" aria-label="Změna počtu leadů v procentech" />
+              <div class="slider-labels"><span>−50 %</span><span>0 %</span><span>+100 %</span></div>
             </div>
 
+            <div class="scenario-label" id="scenario-baseline-label">Ilustrativní scénář · výchozí hodnota</div>
             <div class="scenario">
-
               <div class="scenario-card">
-                <span>Kontrakty</span>
-                <strong>1 006</strong>
+                <span id="baseline-label">Výchozí počet kontraktů</span>
+                <strong id="baseline-contracts">1 006</strong>
               </div>
-
               <div class="scenario-card result">
-                <span>Simulovaný výsledek</span>
-                <strong>1 086</strong>
+                <span id="result-label">Modelový výsledek</span>
+                <strong id="simulated-contracts">1 086</strong>
               </div>
-
             </div>
 
             <div class="impact">
-
-              <div class="impact-title">
-                Odhadovaný dopad
-              </div>
-
-              <strong>+80 kontraktů</strong>
-
-              <small>
-                Dopad se začne projevovat přibližně za 4–6 týdnů.
-              </small>
-
+              <div class="impact-title" id="impact-label">Ilustrativní změna výsledku</div>
+              <strong id="impact-value">+80 kontraktů</strong>
+              <small id="impact-note">Pouze ukázkový výpočet, nikoli výstup predikčního modelu Duvodia.</small>
             </div>
 
           </div>
@@ -837,8 +863,8 @@
           </h2>
 
           <p class="sub">
-            Tady začíná nejzajímavější část Duvodia.
-            Místo dalšího reportu můžete experimentovat s budoucností.
+            Tady začíná nejzajímavější část Duvodia. Místo dalšího reportu můžete experimentovat s budoucností.
+            Níže uvedené scénáře jsou ilustrativní příklady, nikoli vypočtené výsledky vašeho modelu.
           </p>
 
         </div>
@@ -869,8 +895,8 @@
                 <span>Více vstupů do funnelu</span>
               </div>
               <div class="scenario-result">
-                +8 %<br />
-                <small>kontraktů</small>
+                Příklad<br />
+                <small>možný dopad</small>
               </div>
             </div>
 
@@ -880,8 +906,8 @@
                 <span>Pokles výkonu mezi fázemi</span>
               </div>
               <div class="scenario-result">
-                −7 %<br />
-                <small>kontraktů</small>
+                Příklad<br />
+                <small>možný dopad</small>
               </div>
             </div>
 
@@ -891,8 +917,8 @@
                 <span>Rychlejší průchod funnelu</span>
               </div>
               <div class="scenario-result">
-                +12 %<br />
-                <small>kontraktů v období</small>
+                Příklad<br />
+                <small>možný dopad</small>
               </div>
             </div>
 
@@ -902,8 +928,8 @@
                 <span>Simulace rizikového scénáře</span>
               </div>
               <div class="scenario-result">
-                −14 %<br />
-                <small>kontraktů</small>
+                Příklad<br />
+                <small>možný dopad</small>
               </div>
             </div>
 
@@ -1102,8 +1128,11 @@
           </p>
 
           <div class="hero-actions" style="justify-content:center;">
-            <a class="btn primary" href="mailto:hello@duvod.io?subject=Chci vyzkoušet Duvodio">
-              Vyzkoušet Duvodio
+            <a class="btn primary" href="http://94.237.27.165:9005/" target="_blank" rel="noopener noreferrer" data-demo-link>
+              Vyzkoušet živé demo ↗
+            </a>
+            <a class="btn" href="mailto:pavel.fryblik@gmail.com?subject=Zájem o Duvodio" data-contact-link>
+              Kontaktovat nás
             </a>
           </div>
 
@@ -1121,5 +1150,6 @@
     </div>
   </footer>
 
+  <script src="app.js" defer></script>
 </body>
 </html>
